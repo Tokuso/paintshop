@@ -11,12 +11,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <GL/glut.h>  // GLUT, includes glu.h and gl.h
-#include <GL/gl.h>
-#include <GL/glu.h>
 #include <glm/glm.hpp>
 #include <math.h>
 #include <vector>
-#include <array>
 
 using std::cout;
 using std::endl;
