@@ -1,3 +1,4 @@
+
 #ifndef WIN32 //if using windows then do windows specific stuff.
 #define WIN32_LEAN_AND_MEAN //remove MFC overhead from windows.h which can cause slowness
 #define WIN32_EXTRA_LEAN

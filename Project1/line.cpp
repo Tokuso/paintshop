@@ -12,14 +12,12 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include <vector>
-#include <string>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::vector;
 using std::end;
-using std::to_string;
 
 int left_mouse_down = 0;
 vector <GLfloat> line_position(4, 0.0f);
