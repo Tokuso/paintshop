@@ -1,6 +1,3 @@
-// Changed the point size thing. Don't know if compiles after that...
-
-
 #ifndef WIN32 //if using windows then do windows specific stuff.
 #define WIN32_LEAN_AND_MEAN //remove MFC overhead from windows.h which can cause slowness
 #define WIN32_EXTRA_LEAN
@@ -8,13 +5,11 @@
 #include <windows.h>
 #endif
 
-
+//I sincerely do not understand why intellisense suddently works now
 #include <iostream>
 #include <cstdlib>
-//#include <../packages/nupengl.core.0.1.0.1/build/native/include/GL/glut.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
-//#include <../packages/GLMathematics.0.9.5.4/build/native/include/glm/glm.hpp>
 #include <math.h>
 #include <vector>
 
