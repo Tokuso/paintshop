@@ -8,10 +8,11 @@
 #include <windows.h>
 #endif
 
+
 #include <iostream>
 #include <cstdlib>
-#include <GL/glut.h>  // GLUT, includes glu.h and gl.h
-#include <glm/glm.hpp>
+#include <../packages/nupengl.core.0.1.0.1/build/native/include/GL/glut.h>
+#include <../packages/GLMathematics.0.9.5.4/build/native/include/glm/glm.hpp>
 #include <math.h>
 #include <vector>
 
