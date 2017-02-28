@@ -11,12 +11,16 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include <vector>
+#include <tuple>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::vector;
 using std::end;
+using std::tuple;
+using std::make_tuple;
+using std::tie;
 
 int left_mouse_down = 0;
 int mode = 0;
@@ -27,6 +31,11 @@ vector <vector<GLfloat>> rectangles;
 vector <GLfloat> point_position = { 0.0f, 0.0f };
 vector <vector<GLfloat>> points;
 vector <vector<vector<GLfloat>>> scribbles;
+
+// Just a function to clear the CLI during debugging.
+void clrscr() {
+	system("cls");
+}
 
 // Tells GL to draw line segments based on the captured and current coordinates.
 void draw_lines() {
@@ -106,17 +115,24 @@ void OnMouseClick(int button, int state, int x, int y) {
 	int height = glutGet(GLUT_WINDOW_HEIGHT);
 	GLfloat x_pos = (float(x) - width / 2) / (width / 2);
 	GLfloat y_pos = (0 - 1) * (float(y) - height / 2) / (height / 2);
-	cout << x_pos << "\t" << y_pos << "\t" << state << "\t" << button << endl;
 	if (state == 0) {
+		clrscr();
+		cout << "Mouse button PRESSED" << endl;
+		cout << "x1\ty1\tstate\tbutton" << endl;
+		cout << x_pos << "\t" << y_pos << "\t" << state << "\t" << button << endl;
 		left_mouse_down = 1;
 		switch (mode) {
 			case 0:
 				line_position[0] = x_pos;
 				line_position[1] = y_pos;
+				line_position[2] = x_pos;
+				line_position[3] = y_pos;
 				break;
 			case 1:
 				rectangle_position[0] = x_pos;
 				rectangle_position[1] = y_pos;
+				rectangle_position[2] = x_pos;
+				rectangle_position[3] = y_pos;
 				break;
 			case 2:
 				break;
@@ -126,6 +142,9 @@ void OnMouseClick(int button, int state, int x, int y) {
 		
 	}
 	else {
+		cout << "Mouse button DEPRESSED" << endl;
+		cout << "x2\ty2\tstate\tbutton" << endl;
+		cout << x_pos << "\t" << y_pos << "\t" << state << "\t" << button << endl;
 		left_mouse_down = 0;
 		switch (mode) {
 			case 0:
@@ -135,6 +154,8 @@ void OnMouseClick(int button, int state, int x, int y) {
 					line_position[2],
 					line_position[3]
 				});
+				cout << "Points stored in the vectors: " << endl;
+				cout << "x1\ty1\tx2\ty2" << endl;
 				for (vector<GLfloat> coords : lines) {
 					GLfloat x1 = coords[0];
 					GLfloat y1 = coords[1];
@@ -150,7 +171,6 @@ void OnMouseClick(int button, int state, int x, int y) {
 					rectangle_position[2],
 					rectangle_position[3]
 				});
-				glutPostRedisplay();
 				for (vector<GLfloat> coords : rectangles) {
 					GLfloat x1 = coords[0];
 					GLfloat y1 = coords[1];
@@ -188,7 +208,7 @@ void motion(int x, int y) {
 				rectangle_position[3] = y_pos;
 				glutPostRedisplay();
 				break;
-			case 3:
+			case 2:
 				point_position[0] = x_pos;
 				point_position[1] = y_pos;
 				points.push_back({ x_pos, y_pos });
@@ -197,7 +217,6 @@ void motion(int x, int y) {
 			default:
 				break;
 		}
-		
 	}
 }
 
@@ -205,22 +224,14 @@ void display() {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set background color to black and opaque
 	glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer
 	
-	switch (mode) {
-		case 0:
-			draw_lines();
-			break;
-		case 1:
-			draw_rectangles();
-			break;
-		case 3:
-			draw_points();
-	}
-	
+	draw_lines();
+	draw_rectangles();
+	draw_points();
 
 	glFlush();  // Render now
 }
 
-/*
+
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 		case '0':
@@ -236,7 +247,7 @@ void keyboard(unsigned char key, int x, int y) {
 			break;
 	}
 }
-*/
+
 
 // GLUT runs as a console application starting at main()
 int main(int argc, char** argv) {
@@ -247,7 +258,7 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutMouseFunc(OnMouseClick);
 	glutMotionFunc(motion);
-	//glutKeyboardFunc(keyboard);
+	glutKeyboardFunc(keyboard);
 	glLineWidth(3);
 	glutMainLoop();
 	return 0;
