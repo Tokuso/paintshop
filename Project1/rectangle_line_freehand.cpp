@@ -197,6 +197,7 @@ void motion(int x, int y) {
 	GLfloat x_pos = (float(x) - width / 2) / (width / 2);
 	GLfloat y_pos = (0 - 1) * (float(y) - height / 2) / (height / 2);
 	if (left_mouse_down) {
+        // Maybe we can cut this switch tree down a bit by using unified position globals?
 		switch (mode) {
 			case 0:
 				line_position[2] = x_pos;
