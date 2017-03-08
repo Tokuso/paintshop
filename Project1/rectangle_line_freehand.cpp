@@ -22,19 +22,65 @@ using std::tuple;
 using std::make_tuple;
 using std::tie;
 
+// Globals for control switches.
 int left_mouse_down = 0;
 int mode = 0;
+int triangle_phase = 0;
+
+// Globals storing lines.
 vector <GLfloat> line_position(4, 0.0f);
-vector <vector<GLfloat>> lines;
+vector <vector <GLfloat>> lines;
+
+// Globals storing rectangles.
 vector <GLfloat> rectangle_position(4, 0.0f);
-vector <vector<GLfloat>> rectangles;
+vector <vector <GLfloat>> rectangles;
+
+// Globals storing scribbles.
 vector <GLfloat> point_position = { 0.0f, 0.0f };
-vector <vector<GLfloat>> points;
-vector <vector<vector<GLfloat>>> scribbles;
+vector <vector <GLfloat>> points;
+vector <vector <vector<GLfloat>>> scribbles;
+
+// Globals storing triangles
+vector <GLfloat> triangle(6, 0.0f);
+vector <vector <GLfloat>> triangles;
 
 // Just a function to clear the CLI during debugging.
 void clrscr() {
 	system("cls");
+}
+
+void draw_triangles() {
+	/*
+	glColor4f(0.0f, 1.0f, 0.0f, 0.0f);
+	glBegin(GL_LINES);
+	glVertex2f(
+		triangle[0],
+		triangle[1]
+	);
+	glVertex2f(
+		triangle[2],
+		triangle[3]
+	);
+	glEnd();
+	*/
+
+	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
+	glBegin(GL_TRIANGLES);
+	for (vector <GLfloat> coords : triangles) {
+		glVertex2f(
+			coords[0],
+			coords[1]
+		);
+		glVertex2f(
+			coords[2],
+			coords[3]
+		);
+		glVertex2f(
+			coords[4],
+			coords[5]
+		);
+	}
+	glEnd();
 }
 
 // Tells GL to draw line segments based on the captured and current coordinates.
@@ -50,6 +96,7 @@ void draw_lines() {
 		line_position[3]
 	);
 	glEnd();
+
 	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
 	glBegin(GL_LINES);
 	for (vector<GLfloat> coords : lines) {
@@ -74,6 +121,7 @@ void draw_rectangles() {
 		rectangle_position[2],
 		rectangle_position[3]
 	);
+
 	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
 	for (vector<GLfloat> coords : rectangles) {
 		glRectf(
@@ -83,7 +131,6 @@ void draw_rectangles() {
 			coords[3]
 		);
 	}
-	
 }
 
 // Tells GL to draw points (scribbles) based on the captured and current coordinates.
@@ -96,6 +143,7 @@ void draw_points() {
 		glVertex2f(x, y);
 	}
 	glEnd();
+
 	glColor4f(1.0f, 0.0f, 0.0f, 0.0f);
 	for (vector <vector<GLfloat>> stored_points : scribbles) {
 		glBegin(GL_LINE_STRIP);
@@ -136,6 +184,35 @@ void OnMouseClick(int button, int state, int x, int y) {
 				break;
 			case 2:
 				break;
+			case 3:
+				switch (triangle_phase) {
+					case 0:
+						triangle[0] = x_pos;
+						triangle[1] = y_pos;
+						triangle_phase++;
+						break;
+					case 1:
+						triangle[2] = x_pos;
+						triangle[3] = y_pos;
+						triangle_phase++;
+						break;
+					case 2:
+						triangle[4] = x_pos;
+						triangle[5] = y_pos;
+						triangles.push_back({
+							triangle[0],
+							triangle[1],
+							triangle[2],
+							triangle[3],
+							triangle[4],
+							triangle[5]
+						});
+						cout << "Third triangle point stored." << endl;
+						triangle_phase = 0;
+						break;
+					default:
+						break;
+				}
 			default:
 				break;
 		}
@@ -228,6 +305,7 @@ void display() {
 	draw_lines();
 	draw_rectangles();
 	draw_points();
+	draw_triangles();
 
 	glFlush();  // Render now
 }
@@ -244,6 +322,9 @@ void keyboard(unsigned char key, int x, int y) {
 		case '2':
 			mode = 2;
 			break;
+		case '3':
+			mode = 3;
+			break;
 		default:
 			break;
 	}
@@ -255,7 +336,7 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("PaintShop");
-										   //glutInitWindowPosition(50, 50); // Top left corner is reference
+	//glutInitWindowPosition(50, 50); // Top left corner is reference
 	glutDisplayFunc(display);
 	glutMouseFunc(OnMouseClick);
 	glutMotionFunc(motion);
