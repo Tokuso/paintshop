@@ -13,6 +13,18 @@
 #include <vector>
 #include <tuple>
 
+/*
+	Defining the UI means...
+		- Excluding the area outside the canvas.
+		- Might have to object orient the canvas for zoom, resize, etc.
+		- If we're OO-ing the canvas, maybe OO the layers as well.
+			- OO'd layers would allow movement, undo, other functionality.
+			- Downside: Might make the export a lot more difficult?
+			- Upside: Easier to implement the linear algebra...
+
+	Would the control structures work if we changed fixed vectors into arrays?
+*/
+
 using std::cout;
 using std::endl;
 using std::cin;
